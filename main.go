@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -129,6 +130,12 @@ func crushFile(file io.Reader) (*bytes.Buffer, error) {
 		err = fmt.Errorf("failed to decode image for crushing: %w", err)
 		return nil, err
 	}
+
+	if img.Bounds().Dx() < 800 {
+		err = errors.New("too small to crush")
+		return nil, err
+	}
+
 	resized := imaging.Resize(img, 800, 0, imaging.Lanczos)
 	buf := &bytes.Buffer{}
 	err = imaging.Encode(buf, resized, imaging.PNG)
