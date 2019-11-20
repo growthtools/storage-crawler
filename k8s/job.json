@@ -1,0 +1,32 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "storage-crawler"
+  },
+  "spec": {
+    "backoffLimit": 5,
+    "template": {
+      "spec": {
+        "restartPolicy": "Never",
+        "containers": [
+          {
+            "name": "storage-crawler",
+            "image": "gcr.io/lucid-ceremony-176113/storage-crawler:v0.0.1",
+            "env": [
+              {
+                "name": "GCLOUD_STORAGE_CREDS",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "attract",
+                    "key": "gcloud-storage-creds"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
